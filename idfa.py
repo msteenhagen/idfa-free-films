@@ -54,7 +54,7 @@ while True:
     if len(metaList[counter]) >= 4:
         if "min" in metaList[counter][3]:
             f = open("index.html", "a")
-            f.write("<li><i><b>" + titles[counter] + "</b></i>, " + metaList[counter][0] + ", " + metaList[counter][1] + " (" + metaList[counter][2] + "), " + metaList[counter][3] + ". <a href='" + links[counter] + "'>" + "Visit on idfa.nl" + "</a>"+ "</li>")
+            f.write("<li><i><b>" + titles[counter] + "</b></i>, " + metaList[counter][0] + ", " + metaList[counter][1] + " (" + metaList[counter][2] + "), " + metaList[counter][3] + ". <a href='" + links[counter] + "' target='_blank'>" + "<span class='glyphicon glyphicon-new-window'></span>" + "</a>"+ "</li>")
     counter += 1
     if counter == totalNumber:
         break
