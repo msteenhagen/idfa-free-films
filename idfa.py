@@ -44,16 +44,16 @@ totalNumber = len(links)
 data_to_save = []
 counter = 0
 
-open('index.html', 'w').close()
-with open("head.html") as f:
+open('/index.html', 'w').close()
+with open("/head.html") as f:
     s = f.read()
-f = open("index.html", "a")
+f = open("/index.html", "a")
 f.write(s)
 f.write("<ol type='1'>")
 while True:
     if len(metaList[counter]) >= 4:
         if "min" in metaList[counter][3]:
-            f = open("index.html", "a")
+            f = open("/index.html", "a")
             f.write("<li><i><b>" + titles[counter] + "</b></i>, " + metaList[counter][0] + ", " + metaList[counter][1] + " (" + metaList[counter][2] + "), " + metaList[counter][3] + ". <a href='" + links[counter] + "'>" + "Visit on idfa.nl" + "</a>"+ "</li>")
     counter += 1
     if counter == totalNumber:
