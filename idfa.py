@@ -58,5 +58,5 @@ while True:
     counter += 1
     if counter == totalNumber:
         break
-f.write("</ol>")
+f.write("</ol></body></html>")
 f.close()
