@@ -24,8 +24,8 @@ jobs:
           python idfa.py
       - name: Commit and Push Changes
         run: |
-          git config --local user.email "maarten.steenhagen@filosofi.uu.se"
-          git config --local user.name "msteenhagen"
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
           git add index.html
           git commit -m "Updated index on `date` with GitHub Actions" || echo "No Changes to Commit"
           git push origin main || echo "No Changes to Commit"
