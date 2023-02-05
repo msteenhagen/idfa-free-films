@@ -22,6 +22,8 @@ while True:
     linksRaw = soup.find_all("a", class_="collectionitem-module__link___2NQ6Q")
     titlesRaw = soup.find_all("h2", class_="collectionitem-module__title___1Cpb- type-module__title___2UQhK")
     metaBlock = soup.find_all("ul", class_="metainfo-module__meta___1T338 type-module__default___3yLbV collectionitem-module__meta___2_KWS type-module__defaultSmall___3bbtW")
+    if linksRaw == []: # end of search pages reached
+        break
     for link in linksRaw:
         url = link.get('href')
         links.append(baseUrl + url)
@@ -35,10 +37,7 @@ while True:
             itemList.append(itemText)
         metaList.append(itemList)            
     pageCounter += 1
-    if pageCounter == 49:
-        break
-    else:
-        continue
+    continue
 
 totalNumber = len(links)
 data_to_save = []
