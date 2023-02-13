@@ -3,6 +3,7 @@
 import requests
 from bs4 import BeautifulSoup
 import csv
+from datetime import date
 
 baseUrl = "https://www.idfa.nl"
 links = []
@@ -49,6 +50,9 @@ with open("head.html") as f:
     f.close()
 f = open("index.html", "a")
 f.write(s)
+dateStamp = "<p> Last refreshed on: ", date.today().strftime("%d/%m/%Y"), "</p>"
+dateStamp = ''.join(dateStamp)
+f.write(dateStamp)
 f.write("<ol type='1'>")
 while True:
     if len(metaList[counter]) >= 4:
