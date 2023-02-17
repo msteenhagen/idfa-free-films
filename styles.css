@@ -10,6 +10,11 @@ h1, h2, h3 {
     line-height:1.2
 }
 
+.new {
+    color: orange;
+    font-size: 10px;
+}
+
 @media (prefers-color-scheme: dark) {
     body {
         color: #c9d1d9;

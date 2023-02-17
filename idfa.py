@@ -3,7 +3,9 @@
 import requests
 from bs4 import BeautifulSoup
 import csv
-from datetime import date
+from datetime import date, datetime
+from pandas import *
+import operator
 
 baseUrl = "https://www.idfa.nl"
 links = []
@@ -16,6 +18,7 @@ metaList = []
 
 pageCounter = 1
 
+# 1. Fetch the data from the website
 while True:
     URL = ("https://www.idfa.nl/en/collection/documentaries?page=" + str(pageCounter) + "&filters[tvPrice]=Free")
     page = requests.get(URL)
@@ -25,6 +28,11 @@ while True:
     metaBlock = soup.find_all("ul", class_="metainfo-module__meta___1T338 type-module__default___3yLbV collectionitem-module__meta___2_KWS type-module__defaultSmall___3bbtW")
     if linksRaw == []: # end of search pages reached
         break
+    # FOR TESTING PURPOSES
+    # if pageCounter == 2:
+    #     break
+    # 2. Select from data: director, title, country, year, duration
+    # 3. Put all this in a bunch of variables
     for link in linksRaw:
         url = link.get('href')
         links.append(baseUrl + url)
@@ -40,27 +48,53 @@ while True:
     pageCounter += 1
     continue
 
-totalNumber = len(links)
-data_to_save = []
-counter = 0
+# 3. Open csv file with the local film list 
+colnames = ["title", "director", "country", "year", "duration", "url", "timestamp"]
+data = read_csv("library.csv", names=colnames)
+existing_urls = data.url.tolist()
 
+# 4. Check for each film in the variables if it's already in the local film list. Assume url is unique. 
+counter = 0
+f = open('library.csv','a')
+for url in links:
+    # 6. If no, add to the list with timestamp
+    if url not in existing_urls:
+        if len(metaList[counter]) >= 4:
+            if "min" in metaList[counter][3]:
+                writer = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
+                writer.writerow((titles[counter], metaList[counter][0], metaList[counter][1], metaList[counter][2], metaList[counter][3], links[counter], date.today())) 
+    # 5. If yes, skip
+    counter += 1
+f.close()
+
+# 7. Convert the local film list into an alphabetised HTML page
 open('index.html', 'w').close()
-with open("head.html") as f:
-    s = f.read()
-    f.close()
-f = open("index.html", "a")
-f.write(s)
+with open("head.html") as file:
+    header = file.read()
+    file.close()
+file = open("index.html", "a")
+file.write(header)
 dateStamp = "<p> Last refreshed on: ", date.today().strftime("%d/%m/%Y"), "</p>"
 dateStamp = ''.join(dateStamp)
-f.write(dateStamp)
-f.write("<ol type='1'>")
-while True:
-    if len(metaList[counter]) >= 4:
-        if "min" in metaList[counter][3]:
-            f = open("index.html", "a")
-            f.write("<li><i><b>" + titles[counter] + "</b></i>, " + metaList[counter][0] + ", " + metaList[counter][1] + " (" + metaList[counter][2] + "), " + metaList[counter][3] + ". <a href='" + links[counter] + "' target='_blank'>" + "<span class='glyphicon glyphicon-new-window'></span>" + "</a>"+ "</li>")
-    counter += 1
-    if counter == totalNumber:
-        break
-f.write("</ol></body></html>")
-f.close()
+file.write(dateStamp)
+file.write("<ol type='1'>")
+with open('library.csv', 'r') as library:
+    library_list = csv.reader(library)
+    library_list = sorted(library_list, key=operator.itemgetter(0))
+    libcsv = list(library_list)
+    for line in libcsv:
+        line_to_write = ("<li><i><b>" + line[0] + "</b></i>, " + line[1] + ", " + line[2] + " (" + line[3] + "), " + line[4] + ". <a href='" + line[5] + "'' target='_blank'>" + "<span class='glyphicon glyphicon-new-window'></span>" + "</a>")
+        time_stamp = datetime.strptime(line[6], '%Y-%m-%d')
+        added = date.today()-time_stamp.date()
+        # 8. If timestamp of the film is > (TODAY -7 days), then print it with a 'new' label
+        if added.days<7:
+            file.write(line_to_write + " <b class='new'> NEW</b> " +"</li>")
+        # 9. Else, just print it
+        else:
+            file.write(line_to_write + "</li>")
+file.write("</ol></body></html>")
+file.close()
+
+
+
+
