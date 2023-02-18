@@ -28,8 +28,8 @@ while True:
     if linksRaw == []: # end of search pages reached
         break
     # FOR TESTING PURPOSES
-    if pageCounter == 2:
-        break
+    # if pageCounter == 2:
+    #     break
     # 2. Select from data: director, title, country, year, duration
     # 3. Put all this in a bunch of variables
     for link in linksRaw:
