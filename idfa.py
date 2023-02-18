@@ -74,9 +74,27 @@ with open("head.html") as file:
     file.close()
 file = open("index.html", "a")
 file.write(header)
-dateStamp = "<p> Last refreshed on: ", date.today().strftime("%d/%m/%Y"), "</p>"
+
+with open('library.csv', 'r') as library:
+    library_list = csv.reader(library)
+    library_list = sorted(library_list, key=operator.itemgetter(6), reverse=True)
+    newest = datetime.strptime(library_list[0][6], '%Y-%m-%d')
+    print(newest)
+    last_added = date.today()-newest.date()
+    print(last_added)
+    if last_added.days<1:
+        new_added = ("New films added today. ")
+    elif last_added.days<2:
+        new_added = ("New films added yesterday. ")
+    elif last_added.days<7:
+        new_added = ("New films added ", ("%d days" % last_added.days), " ago. ")
+    else: 
+        new_added = ''
+
+dateStamp = "<p>", ''.join(new_added), "Last refreshed on: ", date.today().strftime("%d/%m/%Y"), "</p>"
 dateStamp = ''.join(dateStamp)
 file.write(dateStamp)
+
 file.write("<ol type='1'>")
 with open('library.csv', 'r') as library:
     library_list = csv.reader(library)
