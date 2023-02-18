@@ -5,7 +5,6 @@ from bs4 import BeautifulSoup
 import csv
 from datetime import date, datetime
 from pandas import *
-import operator
 
 baseUrl = "https://www.idfa.nl"
 links = []
@@ -77,7 +76,7 @@ file.write(header)
 
 with open('library.csv', 'r') as library:
     library_list = csv.reader(library)
-    library_list = sorted(library_list, key=operator.itemgetter(6), reverse=True)
+    library_list = sorted(library_list, key=lambda row: row[6], reverse=True)
     newest = datetime.strptime(library_list[0][6], '%Y-%m-%d')
     print(newest)
     last_added = date.today()-newest.date()
@@ -98,7 +97,7 @@ file.write(dateStamp)
 file.write("<ol type='1'>")
 with open('library.csv', 'r') as library:
     library_list = csv.reader(library)
-    library_list = sorted(library_list, key=operator.itemgetter(0))
+    library_list = sorted(library_list, key=lambda row: row[0])
     libcsv = list(library_list)
     for line in libcsv:
         line_to_write = ("<li><i><b>" + line[0] + "</b></i>, " + line[1] + ", " + line[2] + " (" + line[3] + "), " + line[4] + ". <a href='" + line[5] + "'' target='_blank'>" + "<span class='glyphicon glyphicon-new-window'></span>" + "</a>")
