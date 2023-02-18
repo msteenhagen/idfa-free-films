@@ -28,8 +28,8 @@ while True:
     if linksRaw == []: # end of search pages reached
         break
     # FOR TESTING PURPOSES
-    # if pageCounter == 2:
-    #     break
+    if pageCounter == 2:
+        break
     # 2. Select from data: director, title, country, year, duration
     # 3. Put all this in a bunch of variables
     for link in linksRaw:
@@ -100,12 +100,12 @@ with open('library.csv', 'r') as library:
     library_list = sorted(library_list, key=lambda row: row[0])
     libcsv = list(library_list)
     for line in libcsv:
-        line_to_write = ("<li><i><b>" + line[0] + "</b></i>, " + line[1] + ", " + line[2] + " (" + line[3] + "), " + line[4] + ". <a href='" + line[5] + "' target='_blank'>" + "<span class='glyphicon glyphicon-new-window'></span>" + "</a>")
+        line_to_write = f"<li><i><b>{line[0]}</b></i>, {line[1]}, {line[2]} ({line[3]}), {line[4]}. <a href='{line[5]}' target='_blank'><span class='glyphicon glyphicon-new-window'></span></a>"
         time_stamp = datetime.strptime(line[6], '%Y-%m-%d')
         added = date.today()-time_stamp.date()
         # 8. If timestamp of the film is > (TODAY -7 days), then print it with a 'new' label
         if added.days<7:
-            file.write(line_to_write + " <b class='new'> NEW</b> " +"</li>\n")
+            file.write(line_to_write + " <b class='new'> NEW</b></li>\n")
         # 9. Else, just print it
         else:
             file.write(line_to_write + "</li>\n")
